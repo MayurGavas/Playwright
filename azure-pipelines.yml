@@ -1,0 +1,22 @@
+trigger: none   # 👈 disables auto trigger
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- checkout: self
+
+- task: NodeTool@0
+  inputs:
+    versionSpec: '18.x'
+
+- script: npm ci
+  displayName: Install dependencies
+
+- script: npx playwright install --with-deps
+  displayName: Install Playwright browsers
+
+- script: npx playwright azure test
+  displayName: Run Playwright on Azure
+  env:
+    AZURE_CREDENTIALS: $(AZURE_CREDENTIALS)
